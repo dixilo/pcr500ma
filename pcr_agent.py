@@ -10,7 +10,6 @@ from pcr500ma import PCR500MA, TIMEOUT_DEFAULT
 
 IP_DEFAULT = '202.13.215.89'
 PORT_DEFAULT = 5025
-TIMEOUT_DEFAULT = 10
 
 LOCK_RELEASE_SEC = 1.
 LOCK_RELEASE_TIMEOUT = 10
@@ -127,7 +126,7 @@ class PCRAgent:
 
         with self.lock.acquire_timeout(ACQ_TIMEOUT, job='set_output') as acquired:
             if not acquired:
-                self.log.warn('Could not start set_values because '
+                self.log.warn('Could not start set_output because '
                               f'{self.lock.job} is already running')
                 return False, 'Could not acquire lock.'
 
@@ -149,7 +148,7 @@ class PCRAgent:
 
         with self.lock.acquire_timeout(ACQ_TIMEOUT, job='get_output') as acquired:
             if not acquired:
-                self.log.warn('Could not start get_relays because '
+                self.log.warn('Could not start get_output because '
                               f'{self.lock.job} is already running')
                 return False, 'Could not acquire lock.'
 
@@ -171,7 +170,7 @@ class PCRAgent:
 
         with self.lock.acquire_timeout(ACQ_TIMEOUT, job='set_volt_ac') as acquired:
             if not acquired:
-                self.log.warn('Could not start set_values because '
+                self.log.warn('Could not start set_volt_ac because '
                               f'{self.lock.job} is already running')
                 return False, 'Could not acquire lock.'
 
@@ -192,7 +191,7 @@ class PCRAgent:
 
         with self.lock.acquire_timeout(ACQ_TIMEOUT, job='get_volt_ac') as acquired:
             if not acquired:
-                self.log.warn('Could not start get_relays because '
+                self.log.warn('Could not start get_volt_ac because '
                               f'{self.lock.job} is already running')
                 return False, 'Could not acquire lock.'
 
@@ -220,7 +219,7 @@ class PCRAgent:
 
         with self.lock.acquire_timeout(ACQ_TIMEOUT, job='meas') as acquired:
             if not acquired:
-                self.log.warn('Could not start get_relays because '
+                self.log.warn('Could not start meas because '
                               f'{self.lock.job} is already running')
                 return False, 'Could not acquire lock.'
 
