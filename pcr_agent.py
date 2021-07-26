@@ -252,7 +252,7 @@ def main():
     if args.port is not None:
         kwargs['port'] = args.port
     if args.ip is not None:
-        kwargs['ip'] = args.ip
+        kwargs['ip_addr'] = args.ip
 
     pcr_agent = PCRAgent(agent_inst, **kwargs)
 
