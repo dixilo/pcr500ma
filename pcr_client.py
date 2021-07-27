@@ -11,8 +11,8 @@ def main():
     '''PCR client'''
     pcr_client = MatchedClient('stm-heater-source', args=[])
 
-    pcr_client.set_volt_ac(volt_set=1)
-    pcr_client.set_output(output=True)
+    pcr_client.set_volt_ac(volt_set=0)
+    pcr_client.set_output(output=False)
 
 
 if __name__ == '__main__':
