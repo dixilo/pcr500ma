@@ -9,7 +9,6 @@ BUFFSIZE = 4096
 
 # software limits
 VOLT_ULIM_SOFT = 51
-VOLT_ULIM_TURNON = 5
 
 class PCRException(Exception):
     pass

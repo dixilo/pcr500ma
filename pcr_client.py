@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 '''PCR500MA client'''
 from time import sleep
+from argparse import ArgumentParser
 
 from ocs.matched_client import MatchedClient
-from pcr500ma import VOLT_ULIM_TURNON, VOLT_ULIM_SOFT, PCRException
+from pcr500ma import VOLT_ULIM_SOFT, PCRException
 
 VOLT_STEP = 1
 VOLT_ALLOW = 1
 RAMP_TIME_STEP = 15
+VOLT_ULIM_TURNON = 5
 
-
-def ramp_simple(pcr_inst, volt, vstep=VOLT_STEP):
+def ramp_simple(pcr_inst, volt, vstep=VOLT_STEP, verbose=False):
     '''Ramp to given voltage
     Parameters
     ----------
@@ -54,15 +55,40 @@ def ramp_simple(pcr_inst, volt, vstep=VOLT_STEP):
 
 
 def ramp_temp(pcr_inst, max_inst, volt):
-    '''Ramp voltage 
+    '''Ramp voltage based on temperature read
     '''
+    # FIXME 
+
+def set_output(pcr_inst, output):
+    '''Turn on the source.'''
+    v_tmp = pcr_inst.get_volt_ac()
+    if v_tmp > VOLT_ULIM_TURNON:
+        raise PCRException(f'Voltage difference too high: {v_tmp}')
+    pcr_inst.set_output(output=output)
 
 def main():
     '''PCR client'''
+    parser = ArgumentParser()
+
+    parser.add_argument('operation',
+                        choices=['ramp', 'on', 'off'],
+                        help='Operation type.')
+    parser.add_argument('-v', '--voltage', type=float,
+                        help='Target voltage in V.')
+    parser.add_argument('--verbose', action='store_true',
+                        help='Verbose mode.')
+
+    args = parser.parse_args()
     pcr_client = MatchedClient('stm-heater-source', args=[])
 
-    pcr_client.set_volt_ac(volt_set=1)
-    pcr_client.set_output(output=True)
+    if args.operation == 'ramp':
+        ramp_simple(pcr_client, volt=args.v, verbose=args.verbose)
+    elif args.operation == 'on':
+        set_output(pcr_client, output=True)
+    elif args.operation == 'off':
+        set_output(pcr_client, output=False)
+    else:
+        parser.print_help()
 
 
 if __name__ == '__main__':
