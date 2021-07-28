@@ -25,7 +25,8 @@ def ramp_simple(pcr_inst, volt, vstep=VOLT_STEP, verbose=False):
     assert volt < VOLT_ULIM_SOFT, f'Target voltage exceeds {VOLT_ULIM_SOFT}V.'
 
     # Health check
-    v_target_tmp = pcr_inst.get_volt_ac()
+    _, _, s_meas = pcr_inst.get_volt_ac()
+    v_target_tmp = s_meas['data']['volt_set']
     _, _, s_meas = pcr_inst.meas()
     v_meas_tmp = s_meas['data']['v_ac']
 
@@ -61,7 +62,8 @@ def ramp_temp(pcr_inst, max_inst, volt):
 
 def set_output(pcr_inst, output):
     '''Turn on the source.'''
-    v_tmp = pcr_inst.get_volt_ac()
+    _, _, s_meas = pcr_inst.get_volt_ac()
+    v_tmp = s_meas['data']['volt_set']
     if v_tmp > VOLT_ULIM_TURNON:
         raise PCRException(f'Voltage difference too high: {v_tmp}')
     pcr_inst.set_output(output=output)
@@ -82,7 +84,7 @@ def main():
     pcr_client = MatchedClient('stm-heater-source', args=[])
 
     if args.operation == 'ramp':
-        ramp_simple(pcr_client, volt=args.v, verbose=args.verbose)
+        ramp_simple(pcr_client, volt=args.voltage, verbose=args.verbose)
     elif args.operation == 'on':
         set_output(pcr_client, output=True)
     elif args.operation == 'off':
